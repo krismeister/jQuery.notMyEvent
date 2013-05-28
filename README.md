@@ -19,7 +19,7 @@ $('html').on('click',function($e){
 }
 ```
 
-Unfortunately, the many `stopPropegation();`'s throughout the code all cancel each other out.
+Unfortunately, the many `stopPropegation();`'s throughout the code cancel each other out.
  i.e. A menu will open onclick, but onclick of a different menu the first menu will not close.
 
 The Solution
@@ -27,8 +27,7 @@ The Solution
 
 ```javascript
 $('#elm').on('click',function($e){
-    //now there is no need for stopPropegation() because of $.notMyEvent
-    //do stuff (i.e. Open something);
+    //no need for stopPropegation() because of $.notMyEvent
 });
 
 
@@ -36,7 +35,7 @@ $('#elm').on('click',function($e){
 //wrap it in $.notMyEvent
 $('html').on('click',$('#elm).notMyEvent(
     function($e){
-        //do stuff (i.e. Close something);
+        //this will only fire, if you click outside of #elm
     }
 ));
 ```
@@ -47,6 +46,6 @@ Download it from
 https://github.com/krismeister/jQuery.notMyEvent
 
 
- The License
- -----------
- Do whatever you want.
+The License
+----------
+Do whatever you want.
