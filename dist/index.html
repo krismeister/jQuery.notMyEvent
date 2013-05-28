@@ -1,81 +1,11 @@
 <!doctype html>
 <head>
     <title>jQuery.notMyEvent examples</title>
-    <style>
-        html,body{
-            margin: 0px;
-            background: #444;
-        }
-        body{width: 600px;
-            margin: 0 auto;
-            color: #67c3ee;
-            font-family: sans-serif;
-        }
 
-        .component{
-            border-left: 1px dotted #999;
-            padding: 20px 0;
-            width:27%;
-            float:left;
-            height: 230px;
-            padding: 0px 3%;
-            color: black;
-        }
-
-        h2{clear:both;font-size: 15px;}
-
-        label{
-            display:block;
-            font-size: 12px;
-            padding: 20px 0;
-        }
-
-        a{ display:block;
-            width:90%;
-            height: 35px;
-            color: #fff;
-            background: #555;
-            font: 12px/35px sans-serif;
-            clear:left;
-        }
-        a:hover{
-            background: #666;
-        }
-        .component.open a{
-            height: 100px;
-            background: #777;
-        }
-        pre{
-            color: #ccc;
-            float:right;
-            width:100%;
-            overflow-y: visible;
-            border: none;
-            line-height:1.3em;
-        }
-        pre span{color: #999;}
-
-
-        #component1, .container-label-component1{
-            background: darkolivegreen;
-            color: #222;
-        }
-
-        #component2, .container-label-component2{
-            background: darkkhaki;
-            color: #222;
-        }
-
-        #component3, .container-label-component3{
-            background: saddlebrown;
-            color: #222;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="style.css" />
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="jquery.notMyEvent.min.js"></script>
+    <script src="jquery.notMyEvent.js"></script>
 
     <script>
         // often times in 2 different areas of code you need to
@@ -90,40 +20,16 @@
 
                 //component 1
                 var $container = $(elm),
-                    $anchor = $container.find('a'),
-                    $checkbox = $container.find('input'),
-                    outputLabel = '<span class="container-label-'+$container.attr('id')+'">(' + $container.attr('id') + ')</span> ';
+                        $anchor = $container.find('a'),
+                        outputLabel = '<span class="container-label-'+$container.attr('id')+'">(' + $container.attr('id') + ')</span> ';
 
+                log(outputLabel + 'setting up component');
 
-                log(outputLabel + 'starting component');
-                $checkbox.on('click',resolveCheckbox);
-
-                //resolve to setup the listeners.
-                resolveCheckbox(null);
-
-                function resolveCheckbox($evt){
-                    if($checkbox.is(':checked')){
-
-                        log(outputLabel + 'turning $.on() listeners');
-
-                        //lets init the anchor
-                        $anchor.on('click',anchorClicked);
-
-                        //the stop propegation on the anchor click would normally stop these
-                        //$('html').on('click',htmlClicked);
-                        $('html').on('click', $anchor.notMyEvent(htmlClicked));
-                    }else{
-
-                        log(outputLabel + 'turning $.off() listeners');
-                        $anchor.off('click',anchorClicked);
-
-                        //$('html').off('click',htmlClicked);
-
-                        $('html').off('click', $anchor.notMyEvent(htmlClicked));
-                    }
-                }
+                $anchor.on('click',anchorClicked);
+                $('html').on('click', $anchor.notMyEvent(htmlClicked));
 
                 function anchorClicked($evt){
+
                     //since we are doing $.notMyEvent we do not need to stopPropegation();
                     //$evt.stopPropagation();
                     $evt.preventDefault();
@@ -134,7 +40,7 @@
                 }
 
                 function htmlClicked($evt){
-                    log(outputLabel + 'html clicked');
+                    log(outputLabel + 'html clicked : closing');
                     $container.removeClass('open');
                 }
 
@@ -164,21 +70,14 @@
 
 <div id="component1" class="component">
     <h2>Component 1:</h2>
-    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
     <a href="#">Toggle Me Open/Close</a>
 </div>
 
 <div id="component2" class="component">
     <h2>Component 2:</h2>
-    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
     <a href="#">Toggle Me Open/Close</a>
 </div>
 
-<div id="component3" class="component">
-    <h2>Component 3:</h2>
-    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
-    <a href="#">Toggle Me Open/Close</a>
-</div>
 
 <pre></pre>
 
