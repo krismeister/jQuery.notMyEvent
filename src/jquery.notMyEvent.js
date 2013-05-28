@@ -60,7 +60,7 @@
     // Since jQuery really isn't required for this plugin, use `jQuery` as the
     // namespace only if it already exists, otherwise use the `Cowboy` namespace,
     // creating it if necessary.
-    var $ = window.jQuery || window.Cowboy || (window.Cowboy = {});
+    var $ = window.jQuery || (window.jQuery = {});
 
     $.fn.notMyEvent = function(callback) {
         var $thisSelector = this;
