@@ -1,13 +1,187 @@
 <!doctype html>
-<header>
+<head>
     <title>jQuery.notMyEvent examples</title>
-    <script src="jquery.notMyEvent.js"></script>
     <style>
-        html,body{margin: 0px;background: #000}
-        body{width: 600px;margin: 0 auto;background: #666;border: 1px solid #333;color: white;font-family: sans-serif;}
+        html,body{
+            margin: 0px;
+            background: #444;
+        }
+        body{width: 600px;
+            margin: 0 auto;
+            color: #67c3ee;
+            font-family: sans-serif;
+        }
+
+        .component{
+            border-left: 1px dotted #999;
+            padding: 20px 0;
+            width:27%;
+            float:left;
+            height: 230px;
+            padding: 0px 3%;
+            color: black;
+        }
+
+        h2{clear:both;font-size: 15px;}
+
+        label{
+            display:block;
+            font-size: 12px;
+            padding: 20px 0;
+        }
+
+        a{ display:block;
+            width:90%;
+            height: 35px;
+            color: #fff;
+            background: #555;
+            font: 12px/35px sans-serif;
+            clear:left;
+        }
+        a:hover{
+            background: #666;
+        }
+        .component.open a{
+            height: 100px;
+            background: #777;
+        }
+        pre{
+            color: #ccc;
+            float:right;
+            width:100%;
+            overflow-y: visible;
+            border: none;
+            line-height:1.3em;
+        }
+        pre span{color: #999;}
+
+
+        #component1, .container-label-component1{
+            background: darkolivegreen;
+            color: #222;
+        }
+
+        #component2, .container-label-component2{
+            background: darkkhaki;
+            color: #222;
+        }
+
+        #component3, .container-label-component3{
+            background: saddlebrown;
+            color: #222;
+        }
+
+
     </style>
-</header>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="jquery.notMyEvent.js"></script>
+
+    <script>
+        // often times in 2 different areas of code you need to
+        // perform an action when someone clicks anywhere on the page.
+        // commonly stopPropegation() is used, but it causes clicks
+        // to be blocked in other areas which need to react to the
+        // HTML element being clicked.
+
+        function onDomReady(){
+
+            $('.component').each(function(i,elm){
+
+                //component 1
+                var $container = $(elm),
+                    $anchor = $container.find('a'),
+                    $checkbox = $container.find('input'),
+                    outputLabel = '<span class="container-label-'+$container.attr('id')+'">(' + $container.attr('id') + ')</span> ';
+
+
+                log(outputLabel + 'starting component');
+                $checkbox.on('click',resolveCheckbox);
+
+                //resolve to setup the listeners.
+                resolveCheckbox(null);
+
+                function resolveCheckbox($evt){
+                    if($checkbox.is(':checked')){
+
+                        log(outputLabel + 'turning $.on() listeners');
+
+                        //lets init the anchor
+                        $anchor.on('click',anchorClicked);
+
+                        //the stop propegation on the anchor click would normally stop these
+                        //$('html').on('click',htmlClicked);
+                        $('html').on('click', $anchor.notMyEvent(htmlClicked));
+                    }else{
+
+                        log(outputLabel + 'turning $.off() listeners');
+                        $anchor.off('click',anchorClicked);
+
+                        //$('html').off('click',htmlClicked);
+
+                        $('html').off('click', $anchor.notMyEvent(htmlClicked));
+                    }
+                }
+
+                function anchorClicked($evt){
+                    //since we are doing $.notMyEvent we do not need to stopPropegation();
+                    //$evt.stopPropagation();
+                    $evt.preventDefault();
+
+                    log(outputLabel + 'anchor clicked');
+                    //we want to toggle;
+                    $container.toggleClass('open');
+                }
+
+                function htmlClicked($evt){
+                    log(outputLabel + 'html clicked');
+                    $container.removeClass('open');
+                }
+
+            });
+
+        };
+
+        $(onDomReady);
+
+        var outputCount = 0;
+        function log(msg){
+            var $output = $('pre');
+
+            var count = String(outputCount++);
+            while(count.length<3){
+                count = '0' + count;
+            }
+            $output.html( '<span>' +count + ': </span>' + msg +'\n'+$output.html());
+        }
+    </script>
+
+
+
+</head>
 <body>
-<h1>hi</h1>
+<h1>jQuery.notMyEvent testbed</h1>
+
+<div id="component1" class="component">
+    <h2>Component 1:</h2>
+    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
+    <a href="#">Toggle Me Open/Close</a>
+</div>
+
+<div id="component2" class="component">
+    <h2>Component 2:</h2>
+    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
+    <a href="#">Toggle Me Open/Close</a>
+</div>
+
+<div id="component3" class="component">
+    <h2>Component 3:</h2>
+    <label><input checked type="checkbox"></input>Toggle jquery.on(), jquery.off() event handlers</label>
+    <a href="#">Toggle Me Open/Close</a>
+</div>
+
+<pre></pre>
+
+
 </body>
 </html>
