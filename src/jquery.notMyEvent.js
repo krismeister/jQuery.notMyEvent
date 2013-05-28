@@ -34,7 +34,7 @@
 //
 //    //instead of attaching the HTML handler directly.
 //    //wrap it in $.notMyEvent
-//    $('html').on('click',$('#elm).notMyEvent(
+//    $('html').on('click',$('#elm').notMyEvent(
 //    function($e){
 //        //do stuff (i.e. Close something);
 //    }
