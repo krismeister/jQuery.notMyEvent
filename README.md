@@ -33,7 +33,7 @@ $('#elm').on('click',function($e){
 
 //instead of attaching the HTML handler directly.
 //wrap it in $.notMyEvent
-$('html').on('click',$('#elm).notMyEvent(
+$('html').on('click',$('#elm').notMyEvent(
     function($e){
         //this will only fire, if you click outside of #elm
     }
